@@ -1,9 +1,34 @@
-projects
-.classpath
+# Build outputs
+bin/
 GoMule.jar
+GoMule.zip
 GoMule*.zip
-.project
+
+# Local GoMule project/runtime output
+projects/
 matched.dualFP.txt
 Report.html
-bin
-pvpgn
+pvpgn/
+
+# Local assistant/tool state
+.claude/
+
+# Local PD2 data extracts. Do not ignore the bundled vanilla d2111/ data.
+data/pd2-*/
+
+# Local sample saves and stashes
+*.d2s
+*.d2x
+*.sss
+*.sav
+
+# IDE files
+.classpath
+.project
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
