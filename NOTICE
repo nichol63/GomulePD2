@@ -1,0 +1,20 @@
+GoMulePD2 - Notices
+====================
+
+GoMulePD2 is a fork of GoMule, originally published at:
+
+    https://github.com/sylecn/gomule
+
+Upstream GoMule credits include gohanman, Andy Theuninck, Randall,
+Silospen, sylecn, and other contributors to the GoMule project.
+
+The GoMule source code is distributed under the GNU General Public License,
+version 2.0 (GPL-2.0). This repository keeps the upstream license files:
+
+    LICENSE.txt
+    COPYING.txt
+
+Project Diablo 2, Diablo II, Diablo II: Lord of Destruction, Blizzard game
+data, and Project Diablo 2 game data are not redistributed by this project.
+PD2 season data extracts, save files, and stash files are local user data and
+must remain outside version control.
