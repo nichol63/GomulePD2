@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ant-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Ant
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ant
+
+      - name: Build GoMule jar
+        run: ant Jar-Build
+
+      # TODO: Add JUnit test execution here once parser and round-trip tests exist.
+
+      - name: Upload GoMule jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: GoMule.jar
+          path: GoMule.jar
+          if-no-files-found: error
