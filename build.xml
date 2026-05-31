@@ -30,28 +30,28 @@
 
   <target name="compile" depends="init">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac destdir="${build}" debug="on" target="1.4" classpathref="basic_classpath">
+    <javac destdir="${build}" debug="on" release="17" includeantruntime="false" encoding="UTF-8" classpathref="basic_classpath" excludes="TestyMcTest/**, gomule/dropCalc/remote/**">
       <src path="${src}"/>
     </javac>
   </target>
 
   <target name="compile MBR" depends="init">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac destdir="${build}" debug="on" target="1.4" classpathref="basic_classpath" excludes="TestyMcTest/**, gomule/dropCalc/remote/**">
+    <javac destdir="${build}" debug="on" release="17" includeantruntime="false" encoding="UTF-8" classpathref="basic_classpath" excludes="TestyMcTest/**, gomule/dropCalc/remote/**">
         <src path="${src}"/>
     </javac>
   </target>
 
   <target name="compileDeprecated" depends="init">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac destdir="${build}" debug="on" deprecation="on" classpathref="basic_classpath">
+    <javac destdir="${build}" debug="on" deprecation="on" release="17" includeantruntime="false" encoding="UTF-8" classpathref="basic_classpath" excludes="TestyMcTest/**, gomule/dropCalc/remote/**">
         <src path="${src}"/>
     </javac>
   </target>
 
   <target name="compileOptimized" depends="init">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac destdir="${build}" optimize="on" target="1.4" classpathref="basic_classpath">
+    <javac destdir="${build}" optimize="on" release="17" includeantruntime="false" encoding="UTF-8" classpathref="basic_classpath" excludes="TestyMcTest/**, gomule/dropCalc/remote/**">
         <src path="${src}"/>
     </javac>
   </target>
@@ -97,4 +97,3 @@
   </target>
 
 </project>
-
