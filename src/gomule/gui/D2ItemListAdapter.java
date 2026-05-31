@@ -73,6 +73,11 @@ public abstract class D2ItemListAdapter implements D2ItemList
     {
         return iModified;
     }
+
+    public boolean isReadOnly()
+    {
+        return false;
+    }
     
     public void addD2ItemListListener(D2ItemListListener pListener)
     {

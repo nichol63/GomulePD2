@@ -116,8 +116,9 @@ public class D2Project
 
 		String lStashDir = lLoadProperties.getProperty("StashDir", ".");
 		iStashDialog = new JFileChooser(lStashDir);
-		RandallFileFilter lStashFilter = new RandallFileFilter(".d2x files");
+		RandallFileFilter lStashFilter = new RandallFileFilter(".d2x / .stash files");
 		lStashFilter.addExtension("d2x");
+		lStashFilter.addExtension("stash");
 		iStashDialog.setFileFilter(lStashFilter);
 		iStashDialog.setFileHidingEnabled(true);
 
