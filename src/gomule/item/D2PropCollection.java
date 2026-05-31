@@ -365,22 +365,38 @@ public class D2PropCollection extends ArrayList{
 	public void readProp(D2BitReader pFile, int rootProp, int qFlag) {
 
 		D2TxtFileItemProperties pRow = D2TxtFile.ITEM_STAT_COST.getRow(rootProp);
-		int readLength = Integer.parseInt(pRow.get("Save Bits"));
+		int readLength = parsePropertyInt(pRow, getPreferredSaveValue(pRow, "Save Bits S12", "Save Bits"), "Save Bits", rootProp);
 		int saveAdd = 0;
-		if(!pRow.get("Save Add").equals("")){
-			saveAdd = Integer.parseInt(pRow.get("Save Add"));
+		String lSaveAdd = getPreferredSaveValue(pRow, "Save Add S12", "Save Add");
+		if(!lSaveAdd.equals("")){
+			saveAdd = parsePropertyInt(pRow, lSaveAdd, "Save Add", rootProp);
 		}
-		if (rootProp == 201 || rootProp == 197 || rootProp == 199
-				|| rootProp == 195 || rootProp == 198 || rootProp == 196) {
+		String lSaveParamBits = getPreferredSaveValue(pRow, "Save Param Bits S12", "Save Param Bits");
+		if ("15".equals(pRow.get("descfunc"))) {
 			add(new D2Prop(rootProp, new int[] {(int)pFile.read(6)-saveAdd,(int)pFile.read(10)-saveAdd,(int)pFile.read(readLength) - saveAdd}, qFlag));
 		} else if (rootProp == 204) {
 			add(new D2Prop(rootProp, new int[] {(int)pFile.read(6)-saveAdd,(int)pFile.read(10)-saveAdd,(int)pFile.read(8)-saveAdd,(int)pFile.read(8)-saveAdd}, qFlag));
-		} else if(!pRow.get("Save Param Bits").equals("")){
-			add(new D2Prop(rootProp,new int[] {(int)pFile.read(Integer.parseInt(pRow.get("Save Param Bits"))) - saveAdd,(int)pFile.read(readLength) - saveAdd}, qFlag));
+		} else if(!lSaveParamBits.equals("")){
+			add(new D2Prop(rootProp,new int[] {(int)pFile.read(parsePropertyInt(pRow, lSaveParamBits, "Save Param Bits", rootProp)) - saveAdd,(int)pFile.read(readLength) - saveAdd}, qFlag));
 		} else {
 			add(new D2Prop(rootProp,new int[] {(int)pFile.read(readLength) - saveAdd}, qFlag));
 		}
 
+	}
+
+	private String getPreferredSaveValue(D2TxtFileItemProperties pRow, String pPreferredColumn, String pFallbackColumn) {
+		String lValue = pRow.get(pPreferredColumn);
+		if(!lValue.equals("")){
+			return lValue;
+		}
+		return pRow.get(pFallbackColumn);
+	}
+
+	private int parsePropertyInt(D2TxtFileItemProperties pRow, String pValue, String pColumn, int pRootProp) {
+		if(pValue.equals("")){
+			throw new NumberFormatException("Missing " + pColumn + " for item stat " + pRootProp + " (" + pRow.get("Stat") + ")");
+		}
+		return Integer.parseInt(pValue);
 	}
 
 	public void addAll(D2PropCollection propCollection, int qFlag) {

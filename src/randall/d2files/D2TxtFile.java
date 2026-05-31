@@ -143,9 +143,17 @@ public final class D2TxtFile
 	public static ArrayList propToStat(String pCode, String pMin, String pMax, String pParam, int qFlag){
 
 		ArrayList outArr = new ArrayList();
+		D2TxtFileItemProperties lPropRow = PROPS.searchColumns("code", pCode);
+		if(lPropRow == null){
+			lPropRow = PROPS.searchColumnsCaseInsensitive("code", pCode);
+		}
+		if(lPropRow == null){
+			System.err.println("Warning: missing property code: " + pCode);
+			return outArr;
+		}
 		for(int x = 1;x<8;x++){
 
-			if(D2TxtFile.PROPS.searchColumns("code", pCode).get("stat" + x).equals("")){
+			if(lPropRow.get("stat" + x).equals("")){
 				break;
 			}
 
@@ -175,20 +183,20 @@ public final class D2TxtFile
 				}
 			};
 
-			if(D2TxtFile.PROPS.searchColumns("code", pCode).get("stat" + x).indexOf("max") != -1){
+			if(lPropRow.get("stat" + x).indexOf("max") != -1){
 				pVals[0] = pVals[1];
-			}else if(D2TxtFile.PROPS.searchColumns("code", pCode).get("stat" + x).indexOf("length") != -1){
+			}else if(lPropRow.get("stat" + x).indexOf("length") != -1){
 				if(pVals[2] != 0){
 					pVals[0] = pVals[2];
 				}
 			}
 			pVals[2] = 0;
 
-			if(D2TxtFile.PROPS.searchColumns("code", pCode).get("stat" + x).equals("item_addclassskills")){
-				pVals[0] = Integer.parseInt(D2TxtFile.PROPS.searchColumns("code", pCode).get("val1"));
+			if(lPropRow.get("stat" + x).equals("item_addclassskills")){
+				pVals[0] = Integer.parseInt(lPropRow.get("val1"));
 			}
 
-			outArr.add(new D2Prop(Integer.parseInt(D2TxtFile.ITEM_STAT_COST.searchColumns("Stat",D2TxtFile.PROPS.searchColumns("code", pCode).get("stat" + x)).get("ID")), pVals, qFlag));
+			outArr.add(new D2Prop(Integer.parseInt(D2TxtFile.ITEM_STAT_COST.searchColumns("Stat",lPropRow.get("stat" + x)).get("ID")), pVals, qFlag));
 
 		}
 		return outArr;
@@ -315,6 +323,26 @@ public final class D2TxtFile
 			{
 				if(iData[i].length -1 >= lColNr){
 					if (iData[i][lColNr].equals(pText))
+					{
+						return new D2TxtFileItemProperties(this, i);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public D2TxtFileItemProperties searchColumnsCaseInsensitive(String pCol, String pText)
+	{
+		int lColNr = getCol(pCol);
+
+		if (lColNr != -1)
+		{
+			for (int i = 0; i < iData.length; i++)
+			{
+				if(iData[i].length -1 >= lColNr){
+					if (iData[i][lColNr].equalsIgnoreCase(pText))
 					{
 						return new D2TxtFileItemProperties(this, i);
 					}

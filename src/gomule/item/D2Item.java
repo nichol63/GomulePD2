@@ -798,7 +798,7 @@ public class D2Item implements Comparable, D2ItemInterface {
 
 	private void addSetProperties(D2TxtFileItemProperties fullsetRow) {
 
-		for(int x = 2 ;x<6;x++){
+		for(int x = 2 ;x<=6;x++){
 			if(fullsetRow.get("PCode"+x+"a").equals(""))continue;
 			iProps.addAll(D2TxtFile.propToStat(fullsetRow.get("PCode"+x+"a"), fullsetRow.get("PMin"+x+"a"), fullsetRow.get("PMax"+x+"a"), fullsetRow.get("PParam"+x+"a"), (20 + x)));
 		}
@@ -1282,7 +1282,7 @@ public class D2Item implements Comparable, D2ItemInterface {
 		}else{
 			dispStr.append("<font color=\"#"+ base + "\">" + "<font color=\"#" + rgb + "\">"+ personalization + "'s " + iItemName  + "</font>" + "<br>&#10;");
 		}
-		if (!iBaseItemName.equals(iItemName))dispStr.append("<font color=\"#" + rgb + "\">"+iBaseItemName + "</font>" + "<br>&#10;");
+		if (iBaseItemName != null && !iBaseItemName.equals(iItemName))dispStr.append("<font color=\"#" + rgb + "\">"+iBaseItemName + "</font>" + "<br>&#10;");
 		if(isRuneWord()){
 			dispStr.append("<font color=\"#" + rgb + "\">");
 			for(int x=0;x<iSocketedItems.size();x++){
@@ -2591,6 +2591,9 @@ public class D2Item implements Comparable, D2ItemInterface {
 	}
 
 	public String getBaseItemName(){
+		if(iItemName == null || iBaseItemName == null){
+			return "";
+		}
 		if(!iItemName.equals(iBaseItemName)){
 			return iBaseItemName;
 		}
