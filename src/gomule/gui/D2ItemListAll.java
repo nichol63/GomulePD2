@@ -187,6 +187,11 @@ public class D2ItemListAll implements D2ItemList
         return lNrItems;
     }
 
+    public boolean isReadOnly()
+    {
+        return false;
+    }
+
     public boolean isModified()
     {
         D2ItemList lItemList;

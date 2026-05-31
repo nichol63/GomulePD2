@@ -546,6 +546,17 @@ public class D2ViewStash extends JInternalFrame implements D2ItemContainer, D2It
 	            iDropOne.setVisible(false);
 	            iDropAll.setVisible(false);
             }
+            if ( iStash != null && iStash.isReadOnly() )
+            {
+                // PD2 shared stash is read-only until M3: no muling / dropping / deleting.
+                iPickup.setEnabled(false);
+                iDropOne.setEnabled(false);
+                iDropAll.setEnabled(false);
+                iDropOne.setVisible(false);
+                iDropAll.setVisible(false);
+                if ( iDelete != null ) iDelete.setEnabled(false);
+                if ( iDeleteDups != null ) iDeleteDups.setEnabled(false);
+            }
             iTable.setModel( iItemModel );
         }
         catch( Exception pEx ){
@@ -727,6 +738,11 @@ public class D2ViewStash extends JInternalFrame implements D2ItemContainer, D2It
     }
 
     protected void pickupSelected() {
+            if ( iStash == null || iStash.isReadOnly() )
+            {
+                // read-only stash (e.g. PD2 .stash): viewing only, no pickup/mule.
+                return;
+            }
             Vector lItemList = new Vector();
 
             int lRows[] = iTable.getSelectedRows();
@@ -1135,6 +1151,10 @@ public class D2ViewStash extends JInternalFrame implements D2ItemContainer, D2It
         {
             lTitle += " (" + iItemModel.getRowCount() + "/";
             lTitle += iStash.getNrItems() + ")" + ((iStash.isModified()) ? "*" : "");
+            if (iStash.isReadOnly())
+            {
+                lTitle += " [read-only]";
+            }
             if (iStash.isSC() && iStash.isHC())
             {
                 lTitle += " (Unknown)";

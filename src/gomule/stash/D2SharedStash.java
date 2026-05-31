@@ -220,6 +220,11 @@ public class D2SharedStash extends D2ItemListAdapter
 		return iSC;
 	}
 
+	public boolean isReadOnly()
+	{
+		return true;
+	}
+
 	public ArrayList getItemList()
 	{
 		return iItems;

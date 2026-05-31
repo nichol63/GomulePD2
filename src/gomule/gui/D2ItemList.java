@@ -30,6 +30,7 @@ public interface D2ItemList
     public int getNrItems();
     public String getFilename();
     
+    public boolean isReadOnly();
     public boolean isModified();
     public void addD2ItemListListener(D2ItemListListener pListener);
     public void removeD2ItemListListener(D2ItemListListener pListener);

@@ -1406,9 +1406,10 @@ public class D2FileManager extends JFrame
 			try
 			{
 				String lFilename = lFile.getAbsolutePath();
-				if (!lFilename.endsWith(".d2x"))
+				String lLowerName = lFilename.toLowerCase();
+				if (!lLowerName.endsWith(".d2x") && !lLowerName.endsWith(".stash"))
 				{
-					// force stash name to end with .d2x
+					// force GoMule stash name to end with .d2x; PD2 .stash files open as-is
 					lFilename += ".d2x";
 				}
 
