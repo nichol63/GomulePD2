@@ -20,6 +20,7 @@
   </path>
 
   <property name="pd2.data.dir" value="data/pd2-s13"/>
+  <property name="pd2.sample.save" value="data/sample/RyHCs.d2s"/>
 
   <target name="init">
     <!-- Create the time stamp -->
@@ -69,6 +70,14 @@
         description="Load local PD2 data if present">
     <java classname="randall.d2files.D2DataLoadCheck" fork="true" failonerror="true" classpathref="runtime_classpath">
       <arg value="${pd2.data.dir}"/>
+    </java>
+  </target>
+
+  <target name="check-character" depends="compile"
+        description="Parse and round-trip a local PD2 character save if present">
+    <java classname="gomule.d2s.D2CharacterRoundTripCheck" fork="true" failonerror="true" classpathref="runtime_classpath">
+      <arg value="${pd2.data.dir}"/>
+      <arg value="${pd2.sample.save}"/>
     </java>
   </target>
 

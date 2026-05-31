@@ -28,6 +28,9 @@ jobs:
       - name: Build GoMule jar
         run: ant Jar-Build
 
+      - name: Run guarded PD2 character round-trip check
+        run: ant check-character
+
       # TODO: Add JUnit test execution here once parser and round-trip tests exist.
 
       - name: Upload GoMule jar

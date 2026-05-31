@@ -1327,6 +1327,16 @@ public class D2Character extends D2ItemListAdapter
 	{
 		// backup file
 		D2Backup.backup(pProject, iFileName, iReader);
+		writeCurrentState();
+	}
+
+	void saveWithoutBackupForRoundTripCheck()
+	{
+		writeCurrentState();
+	}
+
+	private void writeCurrentState()
+	{
 		// build an a byte array that contains the
 		// entire item list and insert it into
 		// the open file in place of its current item list

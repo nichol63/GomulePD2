@@ -156,6 +156,10 @@ public class D2Prop {
 			dispLoc = 2;	
 		}else if(pNum == 356){
 			funcN = 40;
+		}else if(pNum == 360){
+			return cleanTblString(oString);
+		}else if(pNum == 207 || pNum == 361){
+			return null;
 		}else if(pNum == 26 || pNum == 8){
 			oString = "Replenishes Mana";
 			funcN = 2;
@@ -323,12 +327,12 @@ public class D2Prop {
 
 			oString = oString.replaceFirst("%d%", Integer.toString(pVals[2]));
 		oString = oString.replaceAll("%d", Integer.toString(pVals[0]));
-		return oString.replaceAll("%s", D2TblFile.getString(D2TxtFile.SKILL_DESC.searchColumns("skilldesc",D2TxtFile.SKILLS.getRow(pVals[1]).get("skilldesc")).get("str name")));
+			return oString.replaceAll("%s", getSkillName(pVals[1]));
 
 		case(16):
 
 			oString = oString.replaceAll("%d", Integer.toString(pVals[1]));
-		return oString.replaceAll("%s", D2TblFile.getString(D2TxtFile.SKILL_DESC.searchColumns("skilldesc",D2TxtFile.SKILLS.getRow(pVals[0]).get("skilldesc")).get("str name")));
+		return oString.replaceAll("%s", getSkillName(pVals[0]));
 
 
 		case(17):
@@ -366,14 +370,14 @@ public class D2Prop {
 
 			oString = oString.replaceFirst("%d", Integer.toString(pVals[2]));
 		oString = oString.replaceAll("%d", Integer.toString(pVals[3]));
-		return "Level " + pVals[0] + " " + D2TblFile.getString(D2TxtFile.SKILL_DESC.searchColumns("skilldesc",D2TxtFile.SKILLS.getRow(pVals[1]).get("skilldesc")).get("str name")) + " " + oString;
+			return "Level " + pVals[0] + " " + getSkillName(pVals[1]) + " " + oString;
 
 		case(27):
-			return "+" + pVals[1] + " to " + D2TblFile.getString(D2TxtFile.SKILL_DESC.searchColumns("skilldesc",D2TxtFile.SKILLS.getRow(pVals[0]).get("skilldesc")).get("str name")) + " " + D2TblFile.getString((D2TxtFile.SKILLS.getRow(D2TxtFile.SKILL_DESC.getRow(pVals[0]).getRowNum()).get("charclass").charAt(0) + "").toUpperCase() + D2TxtFile.SKILLS.getRow(D2TxtFile.SKILL_DESC.getRow(pVals[0]).getRowNum()).get("charclass").substring(1) + "Only");
+			return "+" + pVals[1] + " to " + getSkillName(pVals[0]) + getSkillClassOnly(pVals[0]);
 
 		case(28):
 
-			return "+" + pVals[1] + " to " + D2TblFile.getString(D2TxtFile.SKILL_DESC.searchColumns("skilldesc",D2TxtFile.SKILLS.getRow(pVals[0]).get("skilldesc")).get("str name"));
+			return "+" + pVals[1] + " to " + getSkillName(pVals[0]);
 
 
 		//UNOFFICIAL PROPERTIES
@@ -451,6 +455,64 @@ public class D2Prop {
 		}
 
 		return "Unrecognized property: " + this.pNum;
+	}
+
+	private String cleanTblString(String pString) {
+		if(pString == null || pString.equals("")){
+			return "";
+		}
+
+		StringBuffer lClean = new StringBuffer();
+		for(int i = 0;i<pString.length();i++){
+			if(pString.charAt(i) == 0xff && i + 2 < pString.length() && Character.toLowerCase(pString.charAt(i + 1)) == 'c'){
+				i += 2;
+			}else if(pString.charAt(i) == 0xc3 && i + 3 < pString.length() && pString.charAt(i + 1) == 0xbf && Character.toLowerCase(pString.charAt(i + 2)) == 'c'){
+				i += 3;
+			}else{
+				lClean.append(pString.charAt(i));
+			}
+		}
+		return lClean.toString();
+	}
+
+	private String getSkillName(int pSkillId) {
+		if(pSkillId < 0 || pSkillId >= D2TxtFile.SKILLS.getRowSize()){
+			return "skill " + pSkillId;
+		}
+
+		String lSkillDesc = D2TxtFile.SKILLS.getRow(pSkillId).get("skilldesc");
+		if(!lSkillDesc.equals("")){
+			randall.d2files.D2TxtFileItemProperties lSkillDescRow = D2TxtFile.SKILL_DESC.searchColumns("skilldesc", lSkillDesc);
+			if(lSkillDescRow != null){
+				String lName = D2TblFile.getString(lSkillDescRow.get("str name"));
+				if(lName != null && !lName.equals("")){
+					return cleanTblString(lName);
+				}
+			}
+		}
+
+		String lSkill = D2TxtFile.SKILLS.getRow(pSkillId).get("skill");
+		if(!lSkill.equals("")){
+			return lSkill;
+		}
+		return "skill " + pSkillId;
+	}
+
+	private String getSkillClassOnly(int pSkillId) {
+		if(pSkillId < 0 || pSkillId >= D2TxtFile.SKILLS.getRowSize()){
+			return "";
+		}
+
+		String lClass = D2TxtFile.SKILLS.getRow(pSkillId).get("charclass");
+		if(lClass.equals("")){
+			return "";
+		}
+
+		String lClassOnly = D2TblFile.getString((lClass.charAt(0) + "").toUpperCase() + lClass.substring(1) + "Only");
+		if(lClassOnly == null || lClassOnly.equals("")){
+			return "";
+		}
+		return " " + cleanTblString(lClassOnly);
 	}
 
 	public void applyOp(int cLvl) {
