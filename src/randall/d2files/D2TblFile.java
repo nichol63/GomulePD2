@@ -21,8 +21,6 @@
 package randall.d2files;
 
 
-import gomule.gui.D2FileManager;
-
 import java.io.*;
 import java.util.*;
 
@@ -45,6 +43,7 @@ public class D2TblFile
     
     public static void readAllFiles(String pMod)
     {
+        System.out.println("Loading string tables from: " + pMod);
         sMod = pMod;
         ENG_PATCH = new D2TblFile("patchstring");
         ENG_EXP = new D2TblFile("expansionstring");
@@ -74,9 +73,13 @@ public class D2TblFile
         try 
         {
 //            System.err.println("Attempt to read tbl file");
-            String lFileName = sMod+File.separator+pFileName+".tbl";
+            File lFile = D2DataFiles.resolveCaseInsensitive(sMod, pFileName + ".tbl");
+            if (!lFile.isFile())
+            {
+                return;
+            }
             
-            D2FileReader lFileReader = new D2FileReader(lFileName);
+            D2FileReader lFileReader = new D2FileReader(lFile.getPath());
 
             lFileReader.getCounterInt(8);
 //            System.err.println("CRCOffSet: " + lFileReader.getCounterInt(8));
@@ -154,10 +157,31 @@ public class D2TblFile
         } 
         catch (Exception pEx) 
         {
-            D2FileManager.displayErrorDialog(pEx);
+            System.err.println("Warning: failed to read string table " + pFileName + ".tbl from " + sMod + ": " + pEx.getMessage());
+            pEx.printStackTrace();
         }
     }
-    
+
+    static int getPatchStringCount()
+    {
+        return ENG_PATCH.size();
+    }
+
+    static int getExpansionStringCount()
+    {
+        return ENG_EXP.size();
+    }
+
+    static int getStringCount()
+    {
+        return ENG_STRING.size();
+    }
+
+    private int size()
+    {
+        return iHashMap.size();
+    }
+
     public String getValue(String pKey)
     {
         return (String) iHashMap.get(pKey);
