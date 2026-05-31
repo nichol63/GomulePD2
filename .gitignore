@@ -21,6 +21,8 @@ data/pd2-*/
 *.d2x
 *.sss
 *.sav
+*.stash
+data/sample/
 
 # IDE files
 .classpath

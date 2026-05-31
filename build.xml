@@ -21,6 +21,7 @@
 
   <property name="pd2.data.dir" value="data/pd2-s13"/>
   <property name="pd2.sample.save" value="data/sample/RyHCs.d2s"/>
+  <property name="pd2.sample.stash" value="data/sample/pd2_shared.stash"/>
 
   <target name="init">
     <!-- Create the time stamp -->
@@ -78,6 +79,14 @@
     <java classname="gomule.d2s.D2CharacterRoundTripCheck" fork="true" failonerror="true" classpathref="runtime_classpath">
       <arg value="${pd2.data.dir}"/>
       <arg value="${pd2.sample.save}"/>
+    </java>
+  </target>
+
+  <target name="check-stash" depends="compile"
+        description="Parse a local PD2 shared .stash if present (read-only)">
+    <java classname="gomule.stash.D2SharedStashCheck" fork="true" failonerror="true" classpathref="runtime_classpath">
+      <arg value="${pd2.data.dir}"/>
+      <arg value="${pd2.sample.stash}"/>
     </java>
   </target>
 

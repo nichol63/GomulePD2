@@ -31,6 +31,9 @@ jobs:
       - name: Run guarded PD2 character round-trip check
         run: ant check-character
 
+      - name: Run guarded PD2 shared stash read check
+        run: ant check-stash
+
       # TODO: Add JUnit test execution here once parser and round-trip tests exist.
 
       - name: Upload GoMule jar

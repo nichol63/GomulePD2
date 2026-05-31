@@ -1084,16 +1084,9 @@ public class D2Item implements Comparable, D2ItemInterface {
 			if (((D2Prop) iProps.get(x)).getPNum() == 97
 					|| ((D2Prop) iProps.get(x)).getPNum() == 107) {
 
-				if (iReqLvl < Integer.parseInt(D2TxtFile.SKILLS.searchColumns(
-						"skilldesc",
-						D2TxtFile.SKILL_DESC.getRow(
-								((D2Prop) iProps.get(x)).getPVals()[0]).get(
-								"skilldesc")).get("reqlevel"))) {
-					iReqLvl = (Integer.parseInt(D2TxtFile.SKILLS.searchColumns(
-							"skilldesc",
-							D2TxtFile.SKILL_DESC.getRow(
-									((D2Prop) iProps.get(x)).getPVals()[0])
-									.get("skilldesc")).get("reqlevel")));
+				int lSkillReqLvl = getModSkillReqLevel(((D2Prop) iProps.get(x)).getPVals()[0]);
+				if (lSkillReqLvl != -1 && iReqLvl < lSkillReqLvl) {
+					iReqLvl = lSkillReqLvl;
 				}
 			}
 
@@ -2587,6 +2580,33 @@ public class D2Item implements Comparable, D2ItemInterface {
 	public void refreshItemMods(){
 		if (isTypeArmor() || isTypeWeapon()) {
 			applyItemMods();
+		}
+	}
+
+	// Safely resolve the required level contributed by a +skill mod; returns -1
+	// when the skill / skilldesc / reqlevel cannot be resolved (e.g. PD2 skills
+	// not present in the loaded data) so parsing degrades gracefully rather than
+	// throwing an NPE.
+	private int getModSkillReqLevel(int pSkillDescRef){
+		try{
+			if(pSkillDescRef < 0 || pSkillDescRef >= D2TxtFile.SKILL_DESC.getRowSize()){
+				return -1;
+			}
+			String lSkillDesc = D2TxtFile.SKILL_DESC.getRow(pSkillDescRef).get("skilldesc");
+			if(lSkillDesc == null || lSkillDesc.equals("")){
+				return -1;
+			}
+			D2TxtFileItemProperties lSkillRow = D2TxtFile.SKILLS.searchColumns("skilldesc", lSkillDesc);
+			if(lSkillRow == null){
+				return -1;
+			}
+			String lReqLevel = lSkillRow.get("reqlevel");
+			if(lReqLevel == null || lReqLevel.equals("")){
+				return -1;
+			}
+			return Integer.parseInt(lReqLevel);
+		}catch(Exception pEx){
+			return -1;
 		}
 	}
 

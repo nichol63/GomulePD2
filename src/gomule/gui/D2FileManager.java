@@ -23,6 +23,7 @@ package gomule.gui;
 
 import gomule.d2s.*;
 import gomule.d2x.*;
+import gomule.stash.*;
 import gomule.dropCalc.gui.RealGUI;
 import gomule.item.D2Item;
 import gomule.util.*;
@@ -1506,6 +1507,14 @@ public class D2FileManager extends JFrame
 				throw new Exception("Stash is not Hardcore (HC), this is a project requirement");
 			}
 			System.err.println("Add Stash: " + pFileName );
+			iItemLists.put(pFileName, lList);
+			iViewProject.notifyItemListRead(pFileName);
+		}
+		else if ( pFileName.toLowerCase().endsWith(".stash") || D2SharedStash.hasSharedStashMagic(pFileName) )
+		{
+			// PD2 shared stash (custom .stash format, magic 0xBB55BB55) - read-only for now.
+			lList = new D2SharedStash(pFileName);
+			System.err.println("Add PD2 Shared Stash: " + pFileName );
 			iItemLists.put(pFileName, lList);
 			iViewProject.notifyItemListRead(pFileName);
 		}
