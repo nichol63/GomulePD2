@@ -105,8 +105,10 @@ public class D2FileManager extends JFrame
 
 	private D2FileManager()
 	{
-		D2TxtFile.constructTxtFiles("d2111");
-		D2TblFile.readAllFiles("d2111");
+		String lDataDir = D2DataFiles.getConfiguredDataDir();
+		System.out.println("GoMule data dir: " + lDataDir);
+		D2TxtFile.constructTxtFiles(lDataDir);
+		D2TblFile.readAllFiles(lDataDir);
 
 		iOpenWindows = new ArrayList();
 		iContentPane = new JPanel();

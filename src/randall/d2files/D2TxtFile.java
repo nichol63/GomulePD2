@@ -20,7 +20,6 @@
  ******************************************************************************/
 package randall.d2files;
 
-import gomule.gui.D2FileManager;
 import gomule.item.D2Prop;
 import java.io.*;
 import java.util.*;
@@ -74,7 +73,8 @@ public final class D2TxtFile
 	public static void constructTxtFiles(String pMod)
 	{
 
-		if(read)return;
+		if(read && sMod != null && sMod.equals(pMod))return;
+		System.out.println("Loading text data from: " + pMod);
 		sMod = pMod;
 		MISC = new D2TxtFile("Misc");
 		ARMOR = new D2TxtFile("armor");
@@ -216,12 +216,27 @@ public final class D2TxtFile
 	}
 	
 	private void readInData(){
+		iHeader = new String[0];
+		iData = new String[0][];
 		try
 		{
 			ArrayList strArr = new ArrayList();
-			FileReader lFileIn = new FileReader(sMod + File.separator + iFileName + ".txt");
+			File lFile = D2DataFiles.resolveCaseInsensitive(sMod, iFileName + ".txt");
+			if (!lFile.isFile())
+			{
+				return;
+			}
+
+			FileReader lFileIn = new FileReader(lFile);
 			BufferedReader lIn = new BufferedReader(lFileIn);
 			String lFirstLine = lIn.readLine();
+			if (lFirstLine == null)
+			{
+				lIn.close();
+				lFileIn.close();
+				System.err.println("Warning: empty data file: " + lFile.getPath());
+				return;
+			}
 
 			Pattern p = Pattern.compile("	");
 			iHeader = p.split(lFirstLine);
@@ -252,7 +267,8 @@ public final class D2TxtFile
 		}
 		catch (Exception pEx)
 		{
-			D2FileManager.displayErrorDialog(pEx);
+			System.err.println("Warning: failed to read data file " + iFileName + ".txt from " + sMod + ": " + pEx.getMessage());
+			pEx.printStackTrace();
 		}
 	}
 
